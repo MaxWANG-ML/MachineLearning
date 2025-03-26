@@ -15,7 +15,7 @@ import joblib
 import time
 
 # load data
-data = pd.read_csv('/Users/wangzhengzhuo/Desktop/london_weather.csv')
+data = pd.read_csv('london_weather.csv')
 
 # extract time features
 data['date'] = pd.to_datetime(data['date'], format='%Y%m%d')
@@ -73,9 +73,7 @@ test_targets_scaled = target_scaler.transform(test_targets)
 def create_dataset(features, targets, look_back, predict_steps):
     x, y = [], []
     for i in range(len(features) - look_back - predict_steps + 1):
-        # 只使用特征数据，不包括mean_temp
         x.append(features[i:(i + look_back), :])
-        # 预测未来predict_steps天的mean_temp
         y.append(targets[i + look_back: i + look_back + predict_steps, 0])
     return np.array(x), np.array(y)
 
@@ -96,32 +94,6 @@ lr_scheduler = PolynomialDecay(
     end_learning_rate=0.0001,
     decay_steps=num_train_steps
 )
-# from tensorflow.keras.layers import Layer
-# import tensorflow.keras.backend as K
-#
-# class Attention(Layer):
-#     def __init__(self, **kwargs):
-#         super(Attention, self).__init__(**kwargs)
-#
-#     def call(self, inputs):
-#         # inputs.shape = (batch_size, time_steps, features)
-#         score = K.softmax(K.sum(inputs, axis=-1, keepdims=True), axis=1)
-#         context = inputs * score
-#         return K.sum(context, axis=1)
-# from tensorflow.keras.models import Sequential, Model
-# from tensorflow.keras.layers import Input, LSTM, Dense, Dropout
-#
-# inputs = Input(shape=(lookback, X_train.shape[2]))
-# x = LSTM(128, return_sequences=True)(inputs)
-# x = Dropout(0.2)(x)
-# x = LSTM(64, return_sequences=True)(x)
-# x = Dropout(0.2)(x)
-# x = LSTM(32, return_sequences=True)(x)
-# x = Dropout(0.2)(x)
-# x = Attention()(x)
-# outputs = Dense(future_steps)(x)
-#
-# model = Model(inputs, outputs)
 # LSTM model
 model = Sequential([
     LSTM(128, return_sequences=True, input_shape=(lookback, X_train.shape[2])),
