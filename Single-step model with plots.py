@@ -15,7 +15,7 @@ import joblib
 import time
 
 
-data = pd.read_csv('/Users/wangzhengzhuo/Desktop/london_weather.csv')
+data = pd.read_csv('london_weather.csv')
 
 # transform date format and extract time features
 data['date'] = pd.to_datetime(data['date'], format='%Y%m%d')
@@ -153,33 +153,6 @@ lr_scheduler = PolynomialDecay(
     initial_learning_rate=0.0005,
     end_learning_rate=0.0001,
     decay_steps=num_train_steps)
-
-# from tensorflow.keras.layers import Layer
-# import tensorflow.keras.backend as K
-#
-# class Attention(Layer):
-#     def __init__(self, **kwargs):
-#         super(Attention, self).__init__(**kwargs)
-#
-#     def call(self, inputs):
-#         # inputs.shape = (batch_size, time_steps, features)
-#         score = K.softmax(K.sum(inputs, axis=-1, keepdims=True), axis=1)
-#         context = inputs * score
-#         return K.sum(context, axis=1)
-# from tensorflow.keras.models import Sequential, Model
-# from tensorflow.keras.layers import Input, LSTM, Dense, Dropout
-#
-# inputs = Input(shape=(inputsteps, X_train.shape[2]))
-# x = LSTM(128, return_sequences=True)(inputs)
-# x = Dropout(0.2)(x)
-# x = LSTM(64, return_sequences=True)(x)
-# x = Dropout(0.2)(x)
-# x = LSTM(32, return_sequences=True)(x)
-# x = Dropout(0.2)(x)
-# x = Attention()(x)
-# outputs = Dense(1)(x)
-#
-# model = Model(inputs, outputs)
 
 # model structure
 model = Sequential([
