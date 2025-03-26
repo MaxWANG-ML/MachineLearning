@@ -1,8 +1,7 @@
 This is a short introduction of our SNS project files.
 
 We built single-step and multi-step prediction models:
-Single-step prediction model with LSTM, GRU, CNN-LSTM: Single-step model with plots.py
-
+Single-step prediction model with LSTM, GRU, CNN-LSTM: Single-step model with plots.py      
 Multi-step prediction model with LSTM, GRU, CNN-LSTM: Multi-step model with plots.py
 
 The best two models and feature scalers are saved as well:
