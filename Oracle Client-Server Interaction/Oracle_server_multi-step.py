@@ -7,7 +7,7 @@ import io
 import threading
 from tensorflow.keras.models import load_model
 
-# Global variables to store the model and scalers
+# load model and scalers
 def load_model_and_scalers():
     global model, feature_scaler, target_scaler
 
@@ -58,11 +58,10 @@ def preprocess_data(df):
 
 def process_prediction(file_content):
     try:
-        # Read CSV data
         df = pd.read_csv(io.StringIO(file_content))
         print(f"CSV data parsed successfully, total {len(df)} rows")
 
-        # Ensure the data contains at least 30 days
+        # Ensure the data contains 30 days
         if len(df) != 30:
             return json.dumps({
                 "success": False,
@@ -100,7 +99,6 @@ def process_prediction(file_content):
         # Preprocess the data
         input_data = preprocess_data(df)
 
-        # Use only the most recent 30 days
         input_data = input_data.iloc[-30:].reset_index(drop=True)
 
         # Normalize the input features
@@ -109,7 +107,6 @@ def process_prediction(file_content):
         # Reshape into LSTM input format [samples, timesteps, features]
         X_input = np.reshape(X_scaled, (1, X_scaled.shape[0], X_scaled.shape[1]))
 
-        # Perform prediction
         y_pred_scaled = model.predict(X_input)
 
         # Inverse normalization of prediction results
@@ -122,7 +119,6 @@ def process_prediction(file_content):
             # Calculate each future prediction date
             future_date = last_date + pd.Timedelta(days=i + 1)
 
-            # Debug output
             date_str = future_date.strftime('%Y-%m-%d')
             print(
                 f"Prediction {i + 1}: Original date={last_date}, Computed date={future_date}, Formatted date={date_str}, Temperature={round(float(temp), 2)}")
@@ -150,10 +146,8 @@ def process_prediction(file_content):
 def handle_client(client_socket, client_address):
     print(f"New connection from: {client_address}")
     try:
-        # Set receive timeout
         client_socket.settimeout(30)
 
-        # Receive data in chunks
         chunks = []
         while True:
             chunk = client_socket.recv(4096)
