@@ -11,7 +11,6 @@ def is_valid_csv(file_path):
             print(f"Error: File '{file_path}' does not exist")
             return False
 
-        # Try reading the CSV file
         df = pd.read_csv(file_path)
 
         # Check for required columns
@@ -25,7 +24,6 @@ def is_valid_csv(file_path):
             print(f"Error: CSV file is missing the following required columns: {', '.join(missing_columns)}")
             return False
 
-        # Check the date column
         try:
             df['date'] = pd.to_datetime(df['date'])
         except:
@@ -55,7 +53,6 @@ def send_request(file_content):
             # Set connection timeout
             client_socket.settimeout(10)
 
-            # Connect to the server
             client_socket.connect((server_host, server_port))
             print(f"Connected to server {server_host}:{server_port}")
 
@@ -82,7 +79,6 @@ def send_request(file_content):
                 except:
                     pass
 
-            # Assemble the response data
             response_data = b''.join(chunks).decode('utf-8')
             return json.loads(response_data)
 
@@ -128,7 +124,6 @@ def client_main():
                 continue
 
             try:
-                # Read file content
                 with open(file_path, 'r', encoding='utf-8') as f:
                     file_content = f.read()
 
