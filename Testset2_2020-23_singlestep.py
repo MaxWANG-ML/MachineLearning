@@ -32,10 +32,8 @@ test_df['pressure'] *= 10
 if 'HU' in test_df.columns:
     test_df = test_df.drop(columns=['HU'])
 
-# 6️⃣ 缺失值处理
 test_df = test_df.interpolate(method='linear')
 
-# 7️⃣ 异常值处理
 Q1 = test_df.quantile(0.25)
 Q3 = test_df.quantile(0.75)
 IQR = Q3 - Q1
@@ -43,22 +41,18 @@ lower_bound = Q1 - 1.5 * IQR
 upper_bound = Q3 + 1.5 * IQR
 test_df = test_df.clip(lower=lower_bound, upper=upper_bound, axis=1)
 
-# 8️⃣ 加载 scaler 和模型
 feature_scaler = joblib.load('feature_scaler_single-step.pkl')
 target_scaler = joblib.load('target_scaler_single-step.pkl')
 model = load_model('single-step_model.h5')
 
-# 9️⃣ 滑窗构造输入
 feature_columns = ['max_temp', 'min_temp', 'precipitation', 'cloud_cover',
                    'snow_depth', 'pressure', 'sunshine', 'global_radiation',
                    'year', 'month', 'day']
 look_back = 5
 
-# 归一化
 X_all = feature_scaler.transform(test_df[feature_columns])
 y_all = target_scaler.transform(test_df[['mean_temp']])
 
-# ✅ 滑动窗口构造函数
 def create_dataset(features, targets, look_back):
     x, y = [], []
     for i in range(len(features) - look_back):
@@ -66,25 +60,20 @@ def create_dataset(features, targets, look_back):
         y.append(targets[i + look_back, 0])
     return np.array(x), np.array(y)
 
-# 构建序列
 X_seq, y_seq = create_dataset(X_all, y_all, look_back)
 y_true = target_scaler.inverse_transform(y_seq.reshape(-1, 1)).flatten()
 
-# 日期对齐（第 look_back+1 天起）
 date_seq = test_df['date'].iloc[look_back:].reset_index(drop=True)
 
-# 🔢 模型预测
 y_pred_scaled = model.predict(X_seq)
 y_pred = target_scaler.inverse_transform(y_pred_scaled).flatten()
 
-# ✅ 性能评估
 rmse = np.sqrt(mean_squared_error(y_true, y_pred))
 r2 = r2_score(y_true, y_pred)
 
-print(f"测试集 RMSE: {rmse:.4f}")
-print(f"测试集 R²  : {r2:.4f}")
+print(f"Test set 2 RMSE: {rmse:.4f}")
+print(f"Test set 2 R²  : {r2:.4f}")
 
-# ✅ 1. 时间序列预测对比图
 plt.figure(figsize=(12, 6))
 plt.plot(date_seq, y_true, label='True Mean Temp', alpha=0.8)
 plt.plot(date_seq, y_pred, label='Predicted Mean Temp', linestyle='--', alpha=0.8)
@@ -97,7 +86,6 @@ plt.grid(True)
 plt.tight_layout()
 plt.show()
 
-# ✅ 2. 预测 vs 真实值散点图
 plt.figure(figsize=(6, 6))
 plt.scatter(y_true, y_pred, alpha=0.6)
 plt.plot([min(y_true), max(y_true)], [min(y_true), max(y_true)],linestyle="dashed", color="black", label="y = x (Perfect Prediction)")
@@ -107,15 +95,3 @@ plt.title('Predicted vs Actual Scatter Plot')
 plt.grid(True)
 plt.tight_layout()
 plt.show()
-
-
-
-# ✅ 4. 残差直方图
-# plt.figure(figsize=(8, 5))
-# plt.hist(residuals, bins=30, edgecolor='black', alpha=0.7)
-# plt.xlabel('Residual')
-# plt.ylabel('Frequency')
-# plt.title('Distribution of Prediction Errors')
-# plt.grid(True)
-# plt.tight_layout()
-# plt.show()
