@@ -25,3 +25,13 @@ The prediction results for the second data set are shown in the following 2 .py 
 single-step generalization: Testset2_2020-23_singlestep.py  
 multi-step generalization: Testset2_2020-23_multistep.py
 
+The two interaction models are built based on the best single-step prediction model and multi-step prediction model:  
+Client-Server for single-step prediction:  
+Oracle_server_single-step.py  
+Oracle_client_single-step.py  
+
+Client-Sever for multi-step prediction:  
+Oracle_server_multi-step.py  
+Oracle_client_multi-step.py  
+
+
