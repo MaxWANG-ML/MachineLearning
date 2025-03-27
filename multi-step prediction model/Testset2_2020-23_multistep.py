@@ -62,7 +62,7 @@ feature_columns = ['max_temp', 'min_temp', 'precipitation', 'cloud_cover',
 look_back = 30  
 future_steps = 5  
 
-# 归一化
+# normalization
 X_all = feature_scaler.transform(test_df[feature_columns])
 y_all = target_scaler.transform(test_df[['mean_temp']])
 
