@@ -61,7 +61,7 @@ def main():
                     print("Server error:", result.get("error", "Unknown error"))
             else:
                 print("No response from server.")
-            break  # Exit after prediction is complete
+            break  
         else:
             print("I can only perform mean temperature predictions. What else can I help you with?")
             print("If you want to predict mean temperature, please include 'predict' and 'mean_temperature' in your input.")
