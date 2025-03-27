@@ -14,7 +14,6 @@ from sklearn.metrics import mean_squared_error, r2_score
 import joblib
 import time
 
-
 data = pd.read_csv('london_weather.csv')
 
 # transform date format and extract time features
@@ -300,7 +299,7 @@ plt.show()
 plt.figure(figsize=(8, 8))
 sns.scatterplot(x=Y_test_inverse.flatten(), y=test_predict_inverse.flatten(), alpha=0.5)
 
-# 添加 y = x 参考线（理想预测情况）
+# y=x perfect prediction
 min_val = min(Y_test_inverse.min(), test_predict_inverse.min())
 max_val = max(Y_test_inverse.max(), test_predict_inverse.max())
 plt.plot([min_val, max_val], [min_val, max_val], linestyle="dashed", color="black", label="y = x (Perfect Prediction)")
