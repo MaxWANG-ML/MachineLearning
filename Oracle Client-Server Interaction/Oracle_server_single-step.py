@@ -9,8 +9,8 @@ import threading
 def load_model_and_scalers():
     global model, feature_scaler, target_scaler
     try:
-        feature_scaler = joblib.load("feature_scaler_single-step.pkl")  # Normalize input features
-        target_scaler = joblib.load("target_scaler_single-step.pkl")    # Inverse normalization for output
+        feature_scaler = joblib.load("feature_scaler_single-step.pkl") 
+        target_scaler = joblib.load("target_scaler_single-step.pkl") 
         model = load_model("single-step_model.h5")
         print("Scalers and LSTM model loaded successfully")
     except Exception as e:
