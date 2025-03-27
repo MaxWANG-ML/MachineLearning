@@ -60,7 +60,6 @@ test_targets = target_df.iloc[train_size + val_size:]
 # Min-Max Normalization
 feature_scaler = MinMaxScaler(feature_range=(0, 1))
 train_features_scaled = feature_scaler.fit_transform(train_features)
-
 val_features_scaled = feature_scaler.transform(val_features)
 test_features_scaled = feature_scaler.transform(test_features)
 
